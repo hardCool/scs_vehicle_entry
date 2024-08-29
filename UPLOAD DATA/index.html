@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Vehicle Details</title>
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyA_FPQl2krPxUAyikSIsZS0YUsZD0ShbVs",
+      authDomain: "testvehicleentry.firebaseapp.com",
+      projectId: "testvehicleentry",
+      storageBucket: "testvehicleentry.appspot.com",
+      messagingSenderId: "591820370546",
+      appId: "1:591820370546:web:dd928800a81967091308eb",
+      measurementId: "G-DCN7GSKH58"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.db = db;
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+  <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+  <style>
+    .datepicker {
+      width: 150px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Upload Vehicle Details</h1>
+  <form id="vehicleForm">
+    <label for="veh_num">Vehicle Number:</label>
+    <input type="text" id="veh_num" name="veh_num" required><br><br>
+
+    <label for="veh_mod">Vehicle Model:</label>
+    <input type="text" id="veh_mod" name="veh_mod" required><br><br>
+
+    <label for="owner">Owner:</label>
+    <input type="text" id="owner" name="owner" required><br><br>
+
+    <label for="complex">Complex:</label>
+    <input type="text" id="complex" name="complex" required><br><br>
+
+    <label for="zone">Zone:</label>
+    <input type="text" id="zone" name="zone" required><br><br>
+
+    <label for="upto">Upto:</label>
+    <input type="text" id="upto" name="upto" class="datepicker" required placeholder="dd/mm/yyyy"><br><br>
+
+    <button type="submit">Upload</button>
+  </form>
+  
+  <!-- Vehicle Deletion Buttons -->
+  <br>
+  <h2>Delete Vehicle</h2>
+  <label for="deleteVehNum">Vehicle Number:</label>
+  <input type="text" id="deleteVehNum" required>
+  <button id="deleteSpecificVehicle">Delete Specific Vehicle</button>
+  
+  <h2>Delete Expired Vehicles</h2>
+  <button id="deleteExpiredVehicles">Delete All Expired Vehicles</button>
+  
+  <!-- Firebase Configuration and JavaScript -->
+  <script type="module" src="app.js"></script>
+  <script>
+    // Initialize Pikaday date picker
+    const picker = new Pikaday({
+      field: document.getElementById('upto'),
+      format: 'DD/MM/YYYY',
+      onSelect: function(date) {
+        document.getElementById('upto').value = this.getDate().toLocaleDateString('en-GB');
+      }
+    });
+  </script>
+</body>
+</html>
