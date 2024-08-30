@@ -11,7 +11,7 @@
 
     // Your Firebase configuration
     const firebaseConfig = {
-      apiKey: "AIzaSyA_FPQl2krPxUAyikSIsZS0YUsZD0ShbVs",
+      apiKey: "AIzaSyA_FPQl2krPxUAyikSIsZS0YUsZD0YUsZD0ShbVs",
       authDomain: "testvehicleentry.firebaseapp.com",
       projectId: "testvehicleentry",
       storageBucket: "testvehicleentry.appspot.com",
@@ -32,6 +32,25 @@
     .datepicker {
       width: 150px;
     }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid black;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
   </style>
 </head>
 <body>
@@ -47,10 +66,23 @@
     <input type="text" id="owner" name="owner" required><br><br>
 
     <label for="complex">Complex:</label>
-    <input type="text" id="complex" name="complex" required><br><br>
+    <select id="complex" name="complex" required>
+      <option value="Main" selected>Main</option>
+      <option value="Additional">Additional</option>
+    </select><br><br>
+
+    <label for="gate">Gate:</label>
+    <select id="gate" name="gate" required>
+      <option value="C-Out, D-Out & E Gate" selected>C-Out, D-Out & E Gate</option>
+      <option value="G Gate">G Gate</option>
+      <option value="A Gate">A Gate</option>
+    </select><br><br>
 
     <label for="zone">Zone:</label>
-    <input type="text" id="zone" name="zone" required><br><br>
+    <select id="zone" name="zone" required>
+      <option value="Low" selected>Low</option>
+      <option value="High">High</option>
+    </select><br><br>
 
     <label for="upto">Upto:</label>
     <input type="text" id="upto" name="upto" class="datepicker" required placeholder="dd/mm/yyyy"><br><br>
@@ -68,6 +100,28 @@
   <h2>Delete Expired Vehicles</h2>
   <button id="deleteExpiredVehicles">Delete All Expired Vehicles</button>
   
+  <h2>Get All Vehicles</h2>
+  <button id="getAllVehicles">Get All Vehicles</button>
+  
+  <!-- Table to Display Vehicle Details -->
+  <div id="vehicleList">
+    <table id="vehicleTable">
+      <thead>
+        <tr>
+          <th>Vehicle Number</th>
+          <th>Model</th>
+          <th>Owner</th>
+          <th>Complex</th>
+          <th>Gate</th>
+          <th>Upto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Vehicle details will be populated here -->
+      </tbody>
+    </table>
+  </div>
+
   <!-- Firebase Configuration and JavaScript -->
   <script type="module" src="app.js"></script>
   <script>
@@ -76,7 +130,36 @@
       field: document.getElementById('upto'),
       format: 'DD/MM/YYYY',
       onSelect: function(date) {
+        const selectedDate = new Date(date);
+        const today = new Date();
+        
+        // Prevent back date selection
+        if (selectedDate < today.setHours(0, 0, 0, 0)) {
+          alert("Enter valid date");
+          this.setDate(null); // Reset the date if invalid
+          return;
+        }
         document.getElementById('upto').value = this.getDate().toLocaleDateString('en-GB');
+      }
+    });
+
+    // Update the gate options based on the selected complex
+    document.getElementById('complex').addEventListener('change', function() {
+      const gateSelect = document.getElementById('gate');
+      gateSelect.innerHTML = ''; // Clear existing options
+
+      if (this.value === 'Main') {
+        gateSelect.innerHTML = `
+          <option value="C-Out, D-Out & E Gate" selected>C-Out, D-Out & E Gate</option>
+          <option value="G Gate">G Gate</option>
+          <option value="A Gate">A Gate</option>
+        `;
+      } else if (this.value === 'Additional') {
+        gateSelect.innerHTML = `
+          <option value="Gate No. 1" selected>Gate No. 1</option>
+          <option value="Gate No. 2">Gate No. 2</option>
+          <option value="Gate No. 3">Gate No. 3</option>
+        `;
       }
     });
   </script>
